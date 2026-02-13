@@ -105,7 +105,7 @@ Therefore, the architecture includes four components:
 4. Heterogeneous systems:  API endpoints, microservices, tools, and databases.
 
 
-# Provisioning and Registration
+# Provisioning, Registration, and Discovery
 
 Figure 2 shows the diagram of provisioning and registration, which includes Agent Certificate Authority(ACA) and Agent Registry Service(ARS):
 
@@ -143,7 +143,7 @@ Identity provisioning and management are the process of creating and assigning a
   * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier(could be the ACA), which reveals operational status, health, configuration, or construction.
   * AI Bill of materials(AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
   * Provider Endorsement: A digital signature or credential from the Agent Provider, ensuring the agent originated from a trusted source.
-  * Identity Binding: A cryptographic binding to a specific human user or an organizational role to define the agent's operational scope.
+  * Identity Binding: A cryptographic binding to a specific human user or an organizational role to specify on whose behalf the agent operates and its authorized scope.
 
 * Credential Issuarance: The ACA validates proofs and requests from the above two steps, if passed, it issues an agent-specific credential that may include its owner or requester identity, capabilities, locator, acceptable validation methods for the ARS.
 
@@ -162,6 +162,13 @@ After receiving a credential from the ACA, the agent then sends it to the ARS to
 ## Agent Onboarding
 Agent onboarding differs between campus and cloud environments. On campus, agents use protocols like EAP-TLS for network access. In the cloud, the process involves injected sidecars, which register agents to the central service mesh registry automatically to enable communication and management.
 
+## Agent Discovery
+After agent onboarding, the discovery process enables entities(e.g., a human user, an agent, etc.) to find and connect with registered agents.
+
+* Authentication: The ARS must authenticate the entity initiating the discovery request. The requester is required to present a valid identity credential.
+* 
+* Capability Filtering & Matching: The ARS performs dynamic filtering based on the requester’s identity and query intent and returns only agent records relevant to the request, enforcing the principle of least privilege at the discovery layer.
+  
 # Cross-Domain Interconnection
 
 ## Cross-Domain Identifier Interoperability
