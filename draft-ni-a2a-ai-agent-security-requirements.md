@@ -204,12 +204,15 @@ Since the agent may inherit its access rights from its owner or user, when authe
 # Access Control
 
 ## Authorization Handling
-
-The master agent acts as the role of OAuth 2.1 resource server. It must validate access tokens as described in OAuth 2.1 Section 5.2. If validation fails, it must respond according to OAuth 2.1 Section 5.3 error handling requirements.
+ The master agent acts as the OAuth 2.1 resource server and a Policy Enforcement Point (PEP). Its responsibilities are as follows:
+ 
+* Token Validation: The master agent must validate access tokens as described in OAuth 2.1 Section 5.2. If validation fails, it must respond according to OAuth 2.1 Section 5.3 error handling requirements.
+  
+* Fine-Grained Policy Enforcement：The master agent serves as a Policy Enforcement Point (PEP) that queries a PDP(Policy Decision Point), such as Open Policy Agent(OPA). The PDP functions by taking the master agent's query, pre-configured policies(supporting RBAC, ABAC, ReBAC models, etc.), and data as inputs to deicide whether the requester is authorized for its intended action. The PDP then returns the final decision to the master agent for enforcement.
 
 ## Authorization Chaining Across Domains
 
-In an agentic AI use case, a request may traverse multiple resource servers in multiple trust domains before completing. It will be common that the requesting agent from domain A needs to access the resource server (master agent) of domain B. During this process, the following information should be preserved:
+In an agentic AI use case, a request may traverse multiple master agents in multiple trust domains before completing. It will be common that the requesting agent from domain A needs to access the master agent of domain B. During this process, the following information should be preserved:
 
 * Original requesting agent identity
 * Authorization context
@@ -218,8 +221,10 @@ In an agentic AI use case, a request may traverse multiple resource servers in m
   * Audience
   * Grant type
   * Assertion
+* Agent-to-Agent Context
 
-The current best practice is {{I-D.draft-ietf-oauth-identity-chaining-06}}.
+The current best practice is {{I-D.draft-ietf-oauth-identity-chaining-06}}, which can preserve the above information during a cross-domain token exchange process. This ensures that internal resource servers perform independent secondary authorization instead of blindly trusting the master agent's upstream validation, preventing the privilege abuse of the master agent and unauthorized lateral movement.
+
 
 ## Converting to Internal Workflow
 
