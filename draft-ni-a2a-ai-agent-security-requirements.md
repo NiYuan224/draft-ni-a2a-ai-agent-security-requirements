@@ -166,7 +166,7 @@ Agent onboarding differs between campus and cloud environments. On campus, agent
 After agent onboarding, the discovery process enables entities(e.g., a human user, an agent, etc.) to find and connect with registered agents.
 
 * Authentication: The ARS must authenticate the entity initiating the discovery request. The requester is required to present a valid identity credential.
-* 
+  
 * Capability Filtering & Matching: The ARS performs dynamic filtering based on the requester’s identity and query intent and returns only agent records relevant to the request, enforcing the principle of least privilege at the discovery layer.
   
 # Cross-Domain Interconnection
