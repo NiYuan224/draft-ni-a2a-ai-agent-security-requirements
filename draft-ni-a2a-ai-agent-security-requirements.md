@@ -138,11 +138,12 @@ Identity provisioning and management are the process of creating and assigning a
 * Initial Trust Establishment: Intial trust can be established through one or more of the following trust anchors, including, but are not limited to: a manufacturer-embedded immutable credential like an IDevID certificate; a hardware root of trust like a Trusted Platform Module (TPM) or Hardware Security Module (HSM); identity documents like an AWS Instance Identity Document or an Azure Managed Service Identity token. This step verifies the agent's execution environment (device, container, etc.) as trustworthy, allows the device or container to join the network, thereby enabling secure operations for all subsequent steps.
 
 
-* Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy：
-  * Proof of Possession(PoP)：The agent should send a Certificate Signing Request(CSR) or a other forms of PoP signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
-  * Remote Attestation Evidence: The agent, as the RATS (Remote Attestation Procedures) attester, should submit a set of Claims about the Target Environment that reveal operational status, health, configuration, or construction that have security relevance as evidence to a RATS Verifier(could be the ACA) .
-  * AI Bill of materials: 
-  * Additionally, to define the agent's operational scope, the request should incorporate user identity context, binding the credential to a specific human user or an organizational role.
+* Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, including, but are not limited to: 
+  * Proof of Possession(PoP)：A Certificate Signing Request(CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
+  * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier(could be the ACA), which reveals operational status, health, configuration, or construction.
+  * AI Bill of materials(AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
+  * Provider Endorsement: A digital signature or credential from the Agent Provider, ensuring the agent originated from a trusted source.
+  * Identity Binding: A cryptographic binding to a specific human user or an organizational role to define the agent's operational scope.
 
 * Credential Issuarance: The ACA validates proofs and requests from the above two steps, if passed, it issues an agent-specific credential that may include its owner or requester identity, capabilities, locator, acceptable validation methods for the ARS.
 
