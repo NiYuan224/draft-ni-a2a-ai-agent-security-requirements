@@ -249,29 +249,27 @@ Examples include:
 
 * Static secrets (API keys) to be exchanged to short-lived, on demand credentials (bearer tokens)
 
+
+
 ## Zero Trust Analysis
 
-The above information can be used as rich context that allow zero trust access control. Remote attestation results of the requesting agent could also be part of access policy decision point's inputs. Remote attestation results of the requesting agent could include the following information:
+The above information can be used as rich context that allow zero trust access control. There are three more aspects can be implemented to enhance the zero trust framework: 
 
-* RoT and trust anchors
-* Identifiers
-* Affiliations
-* Posture assessment results
-* Capabilities
+* Remote Attestation Results:  For the PEP at the master agent or the internal resource server, Remote attestation results could also be part of the inputs, which could include the following information:
+  * RoT and trust anchors
+  * Identifiers
+  * Affiliations
+  * Posture assessment results
+  * Capabilities
 
-The overall information will be used as input of Policy Engine (PE) and Policy Decision Point (PDP).
+* Continuous Observability: The system should utilizes OpenTelemetry (OTel) to track each call across agents, sending OTel’s telemetry data, which records call frequency, error rates, and behavioral anomalies, etc. to the PDP for real-time assessment.
 
-
-## Microsegmentation
-
-Microsegmentation may be enforced to prevent lateral movement of security risks. Possible granularity of microsegmentation includes:
-
-* per IP segment/subnet
-* per each workload
-* per tags and attributes (of workload), etc.
+* Microsegmentation: Based on the telemetry data, PEP can issue software-defined security policies to PEP at the perimeter of each segment to enforce microsegmentation, in order to prevent lateral movement of security risks. Possible granularity of microsegmentation includes:
+  * per IP segment/subnet
+  * per each workload
+  * per tags and attributes (of workload), etc.
 
 
-There should be policy enforcement points (PEP) at the perimeter of each segment. Each PEP can receive software-defined security policies issued by PE/PDP.
 
 # IANA Considerations
 
