@@ -41,6 +41,7 @@ normative:
 informative:
   I-D.draft-ietf-oauth-identity-chaining-06:
   I-D.draft-tulshibagwale-oauth-transaction-tokens-05:
+  I-D.draft-liu-oauth-a2a-profile-00:
 
 ...
 
@@ -228,7 +229,7 @@ The current best practice is {{I-D.draft-ietf-oauth-identity-chaining-06}}, whic
 
 ## Converting to Internal Workflow
 
-* Workflow Generation: Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then create sequential workflows or parallel calls. This requires the master agent to have information of all callable internal API assets, agent capabilities, etc.
+* Workflow Generation: Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then create sequential workflows or parallel calls. This requires the master agent to have information of all callable internal API assets, agent capabilities, etc. Moreover, the Agent-to-Agent context and intent of the original requester must be preserved and propagated throughout the workflow to avoid authorization drift and context poisoning as specified in {{I-D.draft-liu-oauth-a2a-profile-00}}. 
 
 * Downscoping: If the master agent intends to use a workflow, it extracts the original caller's identity and authorization context, and initiates a new internal workflow. It should follow the current least privilege best practice of downscoping-Transaction Tokens as specified in {{I-D.draft-tulshibagwale-oauth-transaction-tokens-05}}. The access rights to each downstream workload decrease.
 
