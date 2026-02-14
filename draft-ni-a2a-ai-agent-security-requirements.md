@@ -53,7 +53,7 @@ This document discusses security requirements for  AI agents, covering different
 # Introduction
 With the widespread application of agentic AI technology across various business scenarios, its security issues have become increasingly prominent.
 
-This document aims to provide an architecture addressing security requirements across different stages of interactions of Agentic AI use cases. These includes provisioning, registration, discovery, cross-domain interconnection, and access control. This document establishes a starting point to guide Agentic AI security design, development, and implementation consideration discussions.
+This document aims to provide an architecture addressing security requirements across different stages of interactions of Agentic AI use cases. These include provisioning, registration, discovery, cross-domain interconnection, and access control. This document establishes a starting point to guide Agentic AI security design, development, and implementation consideration discussions.
 
 
 # Architecture
@@ -108,7 +108,7 @@ Therefore, the architecture includes four components:
 
 # Provisioning, Registration, and Discovery
 
-Figure 2 shows the diagram of provisioning and registration, which includes Agent Certificate Authority(ACA) and Agent Registry Service(ARS):
+Figure 2 shows the diagram of provisioning and registration, which includes Agent Certificate Authority (ACA) and Agent Registry Service (ARS):
 
 1. ACA (Agent Certificate Authority): A trusted third party that issues and manages credentials for agents.
 2. ARS (Agent Registry Service): A system responsible for agent identity registration and discovery-matching.
@@ -136,19 +136,19 @@ Figure 2 shows the diagram of provisioning and registration, which includes Agen
 ## Identity Provisioning and Management
 Identity provisioning and management are the process of creating and assigning a verifiable digital identity to an agent.
 
-* Initial Trust Establishment: Intial trust can be established through one or more of the following trust anchors, including, but are not limited to: a manufacturer-embedded immutable credential like an IDevID certificate; a hardware root of trust like a Trusted Platform Module (TPM) or Hardware Security Module (HSM); identity documents like an AWS Instance Identity Document or an Azure Managed Service Identity token. This step verifies the agent's execution environment (device, container, etc.) as trustworthy, allows the device or container to join the network, thereby enabling secure operations for all subsequent steps.
+* Initial Trust Establishment: Initial trust can be established through one or more of the following trust anchors, including, but not limited to: a manufacturer-embedded immutable credential like an IDevID certificate; a hardware root of trust like a Trusted Platform Module (TPM) or Hardware Security Module (HSM); identity documents like an AWS Instance Identity Document or an Azure Managed Service Identity token. This step verifies the agent's execution environment (device, container, etc.) as trustworthy, allows the device or container to join the network, thereby enabling secure operations for all subsequent steps.
 
 
-* Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, including, but are not limited to: 
-  * Proof of Possession(PoP)：A Certificate Signing Request(CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
-  * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier(could be the ACA), which reveals operational status, health, configuration, or construction.
-  * AI Bill of Materials(AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
+* Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, including, but not limited to: 
+  * Proof of Possession (PoP)：A Certificate Signing Request (CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
+  * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier (could be the ACA), which reveals operational status, health, configuration, or construction.
+  * AI Bill of Materials (AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
   * Provider Endorsement: A digital signature or credential from the Agent Provider, ensuring the agent originated from a trusted source.
   * Identity Binding: A cryptographic binding to a specific human user or an organizational role to specify on whose behalf the agent operates and its authorized scope.
 
 * Credential Issuance: The ACA validates proofs and requests from the above two steps, if passed, it issues an agent-specific credential that may include its owner or requester identity, capabilities, locator, acceptable validation methods for the ARS.
 
-* Credential Lifecycle Mangement: The ACA not only issues credentials but also defines and enforces revocation policies. These policies are triggered by specific events, such as a detected security compromise, the agent's scheduled decommissioning, or a key rotation.
+* Credential Lifecycle Management: The ACA not only issues credentials but also defines and enforces revocation policies. These policies are triggered by specific events, such as a detected security compromise, the agent's scheduled decommissioning, or a key rotation.
 
 
 ## Agent Registration
@@ -164,7 +164,7 @@ After receiving a credential from the ACA, the agent then sends it to the ARS to
 Agent onboarding differs between campus and cloud environments. On campus, agents use protocols like EAP-TLS for network access. In the cloud, the process involves injected sidecars, which register agents to the central service mesh registry automatically to enable communication and management.
 
 ## Agent Discovery
-After agent onboarding, the discovery process enables entities(e.g., a human user, an agent, etc.) to find and connect with registered agents.
+After agent onboarding, the discovery process enables entities (e.g., a human user, an agent, etc.) to find and connect with registered agents.
 
 * Authentication: The ARS must authenticate the entity initiating the discovery request. The requester is required to present a valid identity credential.
   
@@ -209,11 +209,11 @@ Since the agent may inherit its access rights from its owner or user, when authe
  
 * Token Validation: The master agent must validate access tokens as described in OAuth 2.1 Section 5.2. If validation fails, it must respond according to OAuth 2.1 Section 5.3 error handling requirements.
   
-* Fine-Grained Policy Enforcement：The master agent serves as a PEP that queries a PDP(Policy Decision Point), such as Open Policy Agent(OPA), to evaluate the requester’s access request. The PDP functions by taking the master agent's query, pre-configured policies(supporting RBAC, ABAC, ReBAC models, etc.), and data as inputs to deicide whether the requester is authorized for its intended action. The PDP then returns the final decision to the master agent for enforcement.
+* Fine-Grained Policy Enforcement：The master agent serves as a PEP that queries a PDP (Policy Decision Point), such as Open Policy Agent (OPA), to evaluate the requester’s access request. The PDP functions by taking the master agent's query, pre-configured policies (supporting RBAC, ABAC, ReBAC models, etc.), and data as inputs to decide whether the requester is authorized for its intended action. The PDP then returns the final decision to the master agent for enforcement.
 
 ## Authorization Chaining Across Domains
 
-In an agentic AI use case, a request may traverse multiple master agents in multiple trust domains before completing. It will be common that the requesting agent from domain A needs to access the master agent of domain B. During this process, the following information should be preserved:
+In an agentic AI use case, a request may traverse multiple master agents in multiple trust domains before completing. It is common that the requesting agent from domain A needs to access the master agent of domain B. During this process, the following information should be preserved:
 
 * Original requesting agent identity
 * Authorization context
@@ -229,7 +229,7 @@ The current best practice is {{I-D.draft-ietf-oauth-identity-chaining-06}}, whic
 
 ## Converting to Internal Workflow
 
-* Workflow Generation: Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then create sequential workflows or parallel calls. This requires the master agent to have information of all callable internal API assets, agent capabilities, etc.
+* Workflow Generation: Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then creates sequential workflows or parallel calls. This requires the master agent to have information of all callable internal API assets, agent capabilities, etc.
   
 * Downscoping: If the master agent intends to use a workflow, it extracts the original caller's identity and authorization context, and initiates a new internal workflow. It should follow the current least privilege best practice of downscoping-Transaction Tokens as specified in {{I-D.draft-tulshibagwale-oauth-transaction-tokens-05}}. The access rights to each downstream workload decrease.
 
@@ -255,7 +255,7 @@ Examples include:
 
 ## Zero Trust Analysis
 
-The above information can be used as rich context that allow zero trust access control. There are three more aspects can be implemented to enhance the zero trust framework: 
+The above information can be used as rich context that allows zero trust access control. There are three additional aspects can be implemented to enhance the zero trust framework: 
 
 * Remote Attestation Results:  For the PEP at the master agent or the internal resource server, Remote attestation results could also be part of the inputs, which could include the following information:
   * RoT and trust anchors
@@ -264,7 +264,7 @@ The above information can be used as rich context that allow zero trust access c
   * Posture assessment results
   * Capabilities
 
-* Continuous Observability: The system should utilizes OpenTelemetry(OTel) to track each call across agents, sending OTel’s telemetry, which records call frequency, error rates, and behavioral anomalies, etc. to the PDP for real-time assessment.
+* Continuous Observability: The system should utilize OpenTelemetry (OTel) to track each call across agents, sending OTel’s telemetry, which records call frequency, error rates, and behavioral anomalies, etc. to the PDP for real-time assessment.
 
 * Microsegmentation: Based on the telemetry data, PDP can issue software-defined security policies to PEP at the perimeter of each segment to enforce microsegmentation, in order to prevent lateral movement of security risks. Possible granularity of microsegmentation includes:
   * per IP segment/subnet
