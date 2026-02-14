@@ -47,13 +47,13 @@ informative:
 
 --- abstract
 
-This document discusses security requirements for  AI agents, covering different stages of security interactions. These include provisioning, registration, cross-domain interconnection, and access control.
+This document discusses security requirements for  AI agents, covering different stages of security interactions. These include provisioning, registration, discovery, cross-domain interconnection, and access control.
 --- middle
 
 # Introduction
 With the widespread application of agentic AI technology across various business scenarios, its security issues have become increasingly prominent.
 
-This document aims to provide an architecture addressing security requirements across different stages of interactions of Agentic AI use cases. These includes provisioning, registration, cross-domain interconnection, and access control. This document establishes a starting point to guide Agentic AI security design, development, and implementation consideration discussions.
+This document aims to provide an architecture addressing security requirements across different stages of interactions of Agentic AI use cases. These includes provisioning, registration, discovery, cross-domain interconnection, and access control. This document establishes a starting point to guide Agentic AI security design, development, and implementation consideration discussions.
 
 
 # Architecture
@@ -90,7 +90,7 @@ The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "S
 
 The architecture of agent security control and management is illustrated in Figure 1. There are four types of security interactions, in a sequential order:
 
-1. Provisioning and Registration: Creating agent identity, establishing initial trust, provisioning agent secrets and credentials.
+1. Provisioning, Registration, and Discovery: Creating agent identity, establishing initial trust, provisioning agent secrets and credentials, onboarding agents to enable discovery.
 2. Cross-domain Interconnection: Enabling secure, authenticated communication between agents across different trust domains.
 3. Access Control: The Master Agent validates both intra-domain and inter-domain access tokens, creates internal workflow and manages different credentials for heterogeneous systems.
 
@@ -142,11 +142,11 @@ Identity provisioning and management are the process of creating and assigning a
 * Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, including, but are not limited to: 
   * Proof of Possession(PoP)：A Certificate Signing Request(CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
   * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier(could be the ACA), which reveals operational status, health, configuration, or construction.
-  * AI Bill of materials(AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
+  * AI Bill of Materials(AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
   * Provider Endorsement: A digital signature or credential from the Agent Provider, ensuring the agent originated from a trusted source.
   * Identity Binding: A cryptographic binding to a specific human user or an organizational role to specify on whose behalf the agent operates and its authorized scope.
 
-* Credential Issuarance: The ACA validates proofs and requests from the above two steps, if passed, it issues an agent-specific credential that may include its owner or requester identity, capabilities, locator, acceptable validation methods for the ARS.
+* Credential Issuance: The ACA validates proofs and requests from the above two steps, if passed, it issues an agent-specific credential that may include its owner or requester identity, capabilities, locator, acceptable validation methods for the ARS.
 
 * Credential Lifecycle Mangement: The ACA not only issues credentials but also defines and enforces revocation policies. These policies are triggered by specific events, such as a detected security compromise, the agent's scheduled decommissioning, or a key rotation.
 
@@ -168,7 +168,7 @@ After agent onboarding, the discovery process enables entities(e.g., a human use
 
 * Authentication: The ARS must authenticate the entity initiating the discovery request. The requester is required to present a valid identity credential.
   
-* Capability Filtering & Matching: The ARS performs dynamic filtering based on the requester’s identity and query intent and returns only agent records relevant to the request, enforcing the principle of least privilege at the discovery layer.
+* Capability Filtering and Matching: The ARS performs dynamic filtering based on the requester’s identity and query and returns only agent records relevant to the query, enforcing the principle of least privilege at the discovery layer.
   
 # Cross-Domain Interconnection
 
@@ -209,7 +209,7 @@ Since the agent may inherit its access rights from its owner or user, when authe
  
 * Token Validation: The master agent must validate access tokens as described in OAuth 2.1 Section 5.2. If validation fails, it must respond according to OAuth 2.1 Section 5.3 error handling requirements.
   
-* Fine-Grained Policy Enforcement：The master agent serves as a Policy Enforcement Point (PEP) that queries a PDP(Policy Decision Point), such as Open Policy Agent(OPA). The PDP functions by taking the master agent's query, pre-configured policies(supporting RBAC, ABAC, ReBAC models, etc.), and data as inputs to deicide whether the requester is authorized for its intended action. The PDP then returns the final decision to the master agent for enforcement.
+* Fine-Grained Policy Enforcement：The master agent serves as a PEP that queries a PDP(Policy Decision Point), such as Open Policy Agent(OPA), to evaluate the requester’s access request. The PDP functions by taking the master agent's query, pre-configured policies(supporting RBAC, ABAC, ReBAC models, etc.), and data as inputs to deicide whether the requester is authorized for its intended action. The PDP then returns the final decision to the master agent for enforcement.
 
 ## Authorization Chaining Across Domains
 
@@ -229,10 +229,12 @@ The current best practice is {{I-D.draft-ietf-oauth-identity-chaining-06}}, whic
 
 ## Converting to Internal Workflow
 
-* Workflow Generation: Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then create sequential workflows or parallel calls. This requires the master agent to have information of all callable internal API assets, agent capabilities, etc. Moreover, the Agent-to-Agent context and intent of the original requester must be preserved and propagated throughout the workflow to avoid authorization drift and context poisoning as specified in {{I-D.draft-liu-oauth-a2a-profile-00}}. 
-
+* Workflow Generation: Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then create sequential workflows or parallel calls. This requires the master agent to have information of all callable internal API assets, agent capabilities, etc.
+  
 * Downscoping: If the master agent intends to use a workflow, it extracts the original caller's identity and authorization context, and initiates a new internal workflow. It should follow the current least privilege best practice of downscoping-Transaction Tokens as specified in {{I-D.draft-tulshibagwale-oauth-transaction-tokens-05}}. The access rights to each downstream workload decrease.
 
+* Agent-to-Agent Context: the Agent-to-Agent context and intent of the original requester must be preserved and propagated throughout the workflow to avoid authorization drift and context poisoning as specified in {{I-D.draft-liu-oauth-a2a-profile-00}}.
+  
 ## Interoperability for Heterogeneous Systems
 
 Within a domain, there might exist different types of heterogeneous systems or legacy systems that require different authentication methods. They could be API endpoints, microservices, tools or databases. The exact authentication methods are determined by the service itself, for example,
@@ -262,9 +264,9 @@ The above information can be used as rich context that allow zero trust access c
   * Posture assessment results
   * Capabilities
 
-* Continuous Observability: The system should utilizes OpenTelemetry (OTel) to track each call across agents, sending OTel’s telemetry data, which records call frequency, error rates, and behavioral anomalies, etc. to the PDP for real-time assessment.
+* Continuous Observability: The system should utilizes OpenTelemetry(OTel) to track each call across agents, sending OTel’s telemetry, which records call frequency, error rates, and behavioral anomalies, etc. to the PDP for real-time assessment.
 
-* Microsegmentation: Based on the telemetry data, PEP can issue software-defined security policies to PEP at the perimeter of each segment to enforce microsegmentation, in order to prevent lateral movement of security risks. Possible granularity of microsegmentation includes:
+* Microsegmentation: Based on the telemetry data, PDP can issue software-defined security policies to PEP at the perimeter of each segment to enforce microsegmentation, in order to prevent lateral movement of security risks. Possible granularity of microsegmentation includes:
   * per IP segment/subnet
   * per each workload
   * per tags and attributes (of workload), etc.
