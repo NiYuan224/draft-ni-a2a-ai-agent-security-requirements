@@ -141,7 +141,7 @@ Identity provisioning and management are the process of creating and assigning a
 
 * Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, could include, for example, but not limited to: 
   * Proof of Possession (PoP)：A Certificate Signing Request (CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
-  * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier (could be the ACA), which reveals operational status, health, configuration, or construction.
+  * Remote Attestation Evidence or Result: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier (could be the ACA), which reveals operational status, health, configuration, or construction.
   * AI Bill of Materials (AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
   * Provider Endorsement: A digital signature or credential from the Agent Provider, ensuring the agent originated from a trusted source.
   * Identity Binding: A cryptographic binding to a specific human user or an organizational role to specify on whose behalf the agent operates and its authorized scope.
