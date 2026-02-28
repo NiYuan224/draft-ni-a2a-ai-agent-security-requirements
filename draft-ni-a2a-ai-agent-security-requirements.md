@@ -139,7 +139,7 @@ Identity provisioning and management are the process of creating and assigning a
 * Initial Trust Establishment: Initial trust can be established through one or more of the following trust anchors, including, but not limited to: a manufacturer-embedded immutable credential like an IDevID certificate; a hardware root of trust like a Trusted Platform Module (TPM) or Hardware Security Module (HSM); identity documents like an AWS Instance Identity Document or an Azure Managed Service Identity token. This step verifies the agent's execution environment (device, container, etc.) as trustworthy, allows the device or container to join the network, thereby enabling secure operations for all subsequent steps.
 
 
-* Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, including, but not limited to: 
+* Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, could include, for example, but not limited to: 
   * Proof of Possession (PoP)：A Certificate Signing Request (CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.
   * Remote Attestation Evidence: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier (could be the ACA), which reveals operational status, health, configuration, or construction.
   * AI Bill of Materials (AIBOM):  A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.
