@@ -338,9 +338,7 @@ This document has no IANA actions.
 ## Changes from -01 to -02
 {:numbered="false"}
 
-* Corrected editorial, grammatical, and reference issues.
-* Updated author information to match the published -01 version.
-* Added cross-domain agent discovery and trust bundle considerations, referencing the agent discovery architecture draft.
-* Added cross-domain workflow context propagation using Transaction Tokens.
-* Added batch authorization delegation for parallel multi-agent tasks.
-* Removed the obsolete A2A profile reference.
+* Add cross-domain agent discovery and trust bundle considerations.
+* Add cross-domain workflow context propagation.
+* Add batch authorization delegation for parallel multi-agent workflows.
+* Update references and fix editorial issues.
