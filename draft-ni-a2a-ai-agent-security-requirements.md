@@ -27,6 +27,7 @@ venue:
   latest: "https://liuchunchi.github.io/draft-ni-a2a-ai-agent-security-requirements/draft-ni-a2a-ai-agent-security-requirements.html"
 
 author:
+  
   -
     fullname: Yuan Ni
     organization: Huawei
