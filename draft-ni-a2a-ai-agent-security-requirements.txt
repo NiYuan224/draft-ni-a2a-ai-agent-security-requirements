@@ -651,21 +651,14 @@ Changes from -00 to -01
 
 Changes from -01 to -02
 
-   *  Corrected editorial, grammatical, and reference issues.
+   *  Add cross-domain agent discovery and trust bundle considerations.
 
-   *  Updated author information to match the published -01 version.
+   *  Add cross-domain workflow context propagation.
 
-   *  Added cross-domain agent discovery and trust bundle
-      considerations, referencing the agent discovery architecture
-      draft.
+   *  Add batch authorization delegation for parallel multi-agent
+      workflows.
 
-   *  Added cross-domain workflow context propagation using Transaction
-      Tokens.
-
-   *  Added batch authorization delegation for parallel multi-agent
-      tasks.
-
-   *  Removed the obsolete A2A profile reference.
+   *  Update references and fix editorial issues.
 
 Authors' Addresses
 
