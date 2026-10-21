@@ -47,7 +47,7 @@ author:
   -
     fullname: Yuna Xu
     organization: CESI
-    email: xuyuna@cesi.cn  
+    email: xuyuna@cesi.cn
 
 normative:
   RFC2119:
