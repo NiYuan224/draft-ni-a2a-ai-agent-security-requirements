@@ -130,8 +130,7 @@ The above architecture is presented from the perspective of a service flow. From
 Figure 2 shows the diagram of provisioning and registration, which includes Agent Credential Authority (ACA) and Agent Registry Service (ARS):
 
 1. ACA (Agent Credential Authority): A trusted third party that issues and manages credentials for agents. Credential formats include, but are not limited to, X.509 certificates and identity tokens.
-2. 
-3. ARS (Agent Registry Service): A system responsible for agent identity registration and discovery.
+2. ARS (Agent Registry Service): A system responsible for agent identity registration and discovery.
 
 ~~~~
 +-------------------------------------------+
