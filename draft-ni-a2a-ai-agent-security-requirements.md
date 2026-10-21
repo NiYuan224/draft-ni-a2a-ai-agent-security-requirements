@@ -22,12 +22,12 @@ venue:
   type: Working Group
   mail: WG@example.com
   arch: https://example.com/WG
-  
+
   github: "liuchunchi/draft-ni-a2a-ai-agent-security-requirements"
   latest: "https://liuchunchi.github.io/draft-ni-a2a-ai-agent-security-requirements/draft-ni-a2a-ai-agent-security-requirements.html"
 
 author:
-  
+
   -
     fullname: Yuan Ni
     organization: Huawei
@@ -296,10 +296,10 @@ Examples include:
 
 ## Zero Trust Analysis
 
-The above information can be used as rich context that allows zero trust access control. There are three additional aspects that can be implemented to enhance the zero trust framework: 
+The above information can be used as rich context that allows zero trust access control. There are three additional aspects that can be implemented to enhance the zero trust framework:
 
 * Remote Attestation Results:  For the PEP at the master agent or the internal resource server, Remote attestation results could also be part of the inputs, which could include the following information:
-  
+
   * Roots of Trust (RoT) and trust anchors
   * Identifiers
   * Affiliations
