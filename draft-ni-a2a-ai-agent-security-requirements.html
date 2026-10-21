@@ -1,0 +1,1894 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Security Requirements for AI Agents</title>
+<meta content="Yuan Ni" name="author">
+<meta content="Chunchi Peter Liu" name="author">
+<meta content="Qiangzhou Gao" name="author">
+<meta content="Zhenbin Li" name="author">
+<meta content="
+       This document discusses security requirements for AI agents, covering different stages of security interactions. These include provisioning, registration, discovery, cross-domain interconnection, and access control. 
+    " name="description">
+<meta content="xml2rfc 3.34.1" name="generator">
+<meta content="AI Agent" name="keyword">
+<meta content="Provisioning" name="keyword">
+<meta content="Authentication" name="keyword">
+<meta content="Authorization" name="keyword">
+<meta content="draft-ni-a2a-ai-agent-security-requirements-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.34.1
+    Python 3.14.8
+    ConfigArgParse 1.8.0
+    google-i18n-address 3.1.1
+    intervaltree 3.2.1
+    Jinja2 3.1.6
+    lxml 6.1.1
+    natsort 8.4.0
+    platformdirs 4.13.4
+    pycountry 24.6.1
+    PyYAML 6.0.3
+    requests 2.33.1
+    wcwidth 0.9.2
+-->
+<link href="draft-ni-a2a-ai-agent-security-requirements.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: italic;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C8A, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0301, U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-greek.woff2') format('woff2');
+  unicode-range: U+0370-0377, U+037A-037F, U+0384-038A, U+038C, U+038E-03A1, U+03A3-03FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Sofia Sans Semi Condensed';
+  font-style: normal;
+  font-weight: 1 1000;
+  src: url('https://martinthomson.github.io/rfc-css/fonts/sofiasanssemicondensed-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  --font-title: "Sofia Sans Semi Condensed", sans-serif;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+section {
+  clear: both;
+}
+.section-number {
+  padding-right: 0.5em;
+}
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-title);
+  font-weight: 680;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1 {
+  &#title {
+    font-size: 32px;
+    line-height: 40px;
+    clear: both;
+    margin: 1.5em 0 0.2em;
+  }
+  &#rfcnum {
+    margin: 1.5em 0 0.2em;
+    & + h1#title {
+      margin: 0.2em 0;
+    }
+  }
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+  vertical-align: top;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+  & code, & samp, & tt {
+    font-size: 16px;
+    line-height: 0;
+  }
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    margin: 0;
+    float: right;
+    clear: both;
+  }
+  & > *:nth-child(2) {
+    clear: both;
+    display: block;
+    border: none;
+  }
+}
+svg {
+  display: block;
+  /* font-family isn't space-separated, but =~ will have to do */
+  &[font-family~="monospace" i], & [font-family~="monospace" i] {
+    font-family: var(--font-mono);
+  }
+}
+.alignCenter {
+  margin: 1em 0;
+  &.art-text {
+    background-color: var(--highlight-color);
+    border: 1px solid var(--line-color);
+    border-radius: 3px;
+    padding: 0.5em 1em 0;
+    margin-bottom: 0.5em;
+    & pre {
+      padding: 0;
+      width: auto;
+    }
+  }
+  & > *:first-child {
+    border: none;
+    /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+       support flexbox yet.
+    */
+    display: table;
+    margin: 0 auto;
+  }
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+  & :is(ol, ul) {
+    margin-left: 1em;
+  }
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+  & li {
+    margin-top: 0.5em;
+  }
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  margin: 0 0 0 2em;
+  & li {
+    margin: 0;
+    & :first-child { margin-top: 0; }
+    & :last-child { margin-bottom: 0; }
+  }
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+  &.olPercent {
+    --indent: 5ch;
+    & > dt {
+      min-width: calc(var(--indent) - 2ch);
+      float: none;
+    }
+  }
+
+  dl > dd > & {
+    margin-top: 0.5em;
+    margin-bottom: 0;
+  }
+
+  &:not(.dlNewline) > dt {
+    float: left;
+    margin-right: 2ch;
+    min-width: 8ch;
+  }
+  & > dd {
+    margin-bottom: .8em;
+    margin-left: var(--indent) !important; /* stupid element overrides */
+    min-height: 2ex;
+  }
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+  & > :is(:first-child, .break:first-child + *) {
+    margin-top: 0;
+  }
+  & > :is(:last-child) {
+    margin-bottom: 0;
+  }
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a {
+  text-decoration: none;
+  &[href] {
+    color: var(--link-color);
+    &:hover { text-decoration: underline; }
+    &.selfRef {
+      color: var(--text-color);
+      &:hover {
+        text-decoration: none;
+        background-color: var(--highlight-color);
+      }
+    }
+  }
+}
+.iref + a[href].internal {
+  color: var(--text-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+  & blockquote {
+    margin: 0.8em 0.4em 0.4em;
+  }
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+  caption-side: bottom;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) {
+    & p {
+      margin: -2px 0;
+      max-height: 0;
+      transition: max-height 2s ease, margin 0.5s ease 0.5s;
+      overflow: hidden;
+    }
+    &:hover p,
+    & h2:target ~ p {
+      margin: 0.5em 0;
+      max-height: 500px;
+      overflow: auto;
+    }
+  }
+  pre, svg {
+    display: inline-block;
+    /* In the horizontal direction, sometimes people make over-sized figures.
+       Scrollbars for those is therefore necessary: auto adds them as necessary..
+       In the vertical direction, the line-height can combine with the font
+       asender/descender height to produce scrollbars: hidden avoids that. */
+    overflow: auto hidden;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  width: auto;
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+  &.right { margin-left: auto; }
+  &.center { margin-left: auto; margin-right: auto; }
+  &.left { margin-right: auto; }
+  & .text-left { text-align: left; }
+  & .text-center { text-align: center; }
+  & .text-right { text-align: right; }
+  & caption {
+    margin: 0;
+    padding: 3px 0 3px 1em;
+  }
+  & p { margin: 0; }
+}
+
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+  &[href] {
+    color: var(--pilcrow-weak);
+    &:hover { text-decoration: none; }
+  }
+  @media not print {
+    :hover > &, &:focus {
+      opacity: 1;
+    }
+    &[href]:hover {
+      color: var(--pilcrow-strong);
+      background-color: transparent;
+    }
+  }
+  @media print {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+  & dt {
+    width: var(--identifier-width);
+    min-width: var(--identifier-width);
+    clear: left;
+    float: left;
+    text-align: right;
+    margin-right: 1ch;
+  }
+  & dd {
+    margin: 0;
+    margin-left: calc(1em + var(--identifier-width)) !important;
+    min-width: 5em;
+  }
+  & .authors {
+    & .author {
+      display: inline-block;
+      margin-right: 1.5em;
+    }
+    & .org {
+      font-style: italic;
+    }
+  }
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+  & .prepared {
+    float: right;
+  }
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+
+  & nav {
+    & ul {
+      margin: 0 0.5em 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    & li {
+      line-height: 1.3em;
+      margin: 2px 0;
+      padding-left: 1.2em;
+      text-indent: -1.2em;
+    }
+  }
+  & a.xref {
+    white-space: normal;
+  }
+}
+
+.references {
+  & > dt {
+    text-align: right;
+    font-weight: bold;
+    min-width: 10ch;
+    margin-right: 1.5ch;
+    &:target::before {
+      content: "⇒";
+      margin: 0 10px 0 -25px;
+    }
+  }
+  & > dd {
+    margin-left: 12ch !important;
+    overflow: visible;
+    & .refInstance {
+      margin-bottom: 0.8em;
+    }
+    & .ascii {
+      margin-bottom: 0.25em;
+    }
+  }
+}
+
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  max-width: 20em;
+  margin: 1em auto 1em 0;
+
+  & .nameRole {
+    font-weight: 700;
+    margin-left: 0;
+  }
+  & .label {
+    margin: 0.5em 0;
+  }
+  & .type {
+    display: none;
+  }
+  & .alternative-contact {
+    margin: 0.5em 0 0.25em 0;
+  }
+  & .non-ascii {
+    margin: 0 0 0 2em;
+  }
+  & div.left {
+    text-align: left;
+  }
+  & div.right {
+    text-align: right;
+  }
+}
+
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses {
+    & > section {
+      column-count: 2;
+      column-gap: 20px;
+    }
+    & > section > h2 {
+      column-span: all;
+    }
+    /* hack for break-inside: avoid-column */
+    & address {
+      display: inline-block;
+      break-inside: avoid-column;
+    }
+  }
+}
+
+/* Comments */
+.rfcEditorRemove {
+  & p:first-of-type {
+    font-style: italic;
+  }
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+
+@media screen {
+  #toc {
+    & nav {
+      font-family: var(--font-title);
+      font-weight: 360;
+      & > ul { margin-bottom: 2em; }
+      & ul {
+        margin: 0 0 0 4px;
+        & :is(p, li) {
+          margin: 2px 0;
+        }
+      }
+    }
+    & a.toplink {
+      float: right;
+    }
+  }
+}
+@media not screen {
+  #toc a.toplink {
+    display: none;
+  }
+}
+
+
+/* TOC layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 1px 0 0 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+    & h2 {
+      margin: 0;
+      padding: 2px 0 2px 6px;
+      padding-right: 1em;
+      font-size: 18px;
+      line-height: 24px;
+      min-width: 190px;
+      text-align: right;
+      background-color: #444;
+      color: white;
+      cursor: pointer;
+      &::before { /* css hamburger */
+        float: right;
+        position: relative;
+        width: 1em;
+        height: 1px;
+        left: -164px;
+        margin: 8px 0 0 0;
+        background: white none repeat scroll 0 0;
+        box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+        content: "";
+      }
+    }
+    & nav {
+      display: none;
+      background-color: var(--background-color);
+      padding: 0.5em 1em 1em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      height: calc(100vh - 48px);
+      border-left: 1px solid #ddd;
+    }
+    &.active {
+      opacity: 1;
+      & nav { display: block; }
+    }
+    /* Make the collapsed ToC header render white on gray also when it's a link */
+    & h2 a,
+    & h2 a:is(:link, :focus, :hover),
+    & a.toplink,
+    & a.toplink:hover {
+      color: white;
+      background-color: #444;
+      text-decoration: none;
+    }
+    & a.toplink {
+      margin: 2px 0.5em 0;
+    }
+  }
+}
+
+/* TOC layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    & h2 {
+      margin: 0;
+      padding: 0.25em 1em 1em 0;
+    }
+    & nav {
+      display: block;
+      height: calc(90vh - 84px);
+      bottom: 0;
+      padding: 0.5em 0 2em;
+      overflow: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: thin;
+    }
+    & a.toplink {
+      margin: 8px 0.5em 0;
+    }
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc {
+    page-break-before: always;
+    border-top: none;
+    padding-top: 0;
+  }
+  #n-introduction {
+    page-break-before: always;
+  }
+  figure, pre, .vcard {
+    page-break-inside: avoid;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  :is(h2, h3, h4, h5, h6)+*, dd {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg {
+  & :is([stroke="black"], [stroke^="#000"]) {
+    stroke: var(--text-color);
+  }
+  & :is([stroke="white"], [stroke^="#fff"]) {
+    stroke: var(--background-color);
+  }
+  & :is([fill="black"], [fill^="#000"], :not([fill])) {
+    fill: var(--text-color);
+  }
+  & :is([fill="white"], [fill^="#fff"]) {
+    fill: var(--background-color);
+  }
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Agent Security Requirements</td>
+<td class="right">October 2026</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Ni, et al.</td>
+<td class="center">Expires 24 April 2027</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ni-a2a-ai-agent-security-requirements-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2026-10-21" class="published">21 October 2026</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Informational</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2027-04-24">24 April 2027</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">Y. Ni</div>
+<div class="org">Huawei</div>
+</div>
+<div class="author">
+      <div class="author-name">C. P. Liu</div>
+<div class="org">Huawei</div>
+</div>
+<div class="author">
+      <div class="author-name">Q. Gao</div>
+<div class="org">Huawei</div>
+</div>
+<div class="author">
+      <div class="author-name">Z. Li</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Security Requirements for AI Agents</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">This document discusses security requirements for AI agents, covering different stages of security interactions. These include provisioning, registration, discovery, cross-domain interconnection, and access control.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        The latest revision of this draft can be found at <span><a href="https://liuchunchi.github.io/draft-ni-a2a-ai-agent-security-requirements/draft-ni-a2a-ai-agent-security-requirements.html">https://liuchunchi.github.io/draft-ni-a2a-ai-agent-security-requirements/draft-ni-a2a-ai-agent-security-requirements.html</a></span>.
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ni-a2a-ai-agent-security-requirements/">https://datatracker.ietf.org/doc/draft-ni-a2a-ai-agent-security-requirements/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        WG Working Group mailing list (<span><a href="mailto:WG@example.com">mailto:WG@example.com</a></span>),
+        which is archived at <span><a href="https://example.com/WG">https://example.com/WG</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/liuchunchi/draft-ni-a2a-ai-agent-security-requirements">https://github.com/liuchunchi/draft-ni-a2a-ai-agent-security-requirements</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 24 April 2027.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2026 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-architecture" class="internal xref">Architecture</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-provisioning-registration-a" class="internal xref">Provisioning, Registration, and Discovery</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-identity-provisioning-and-m" class="internal xref">Identity Provisioning and Management</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.2">
+                <p id="section-toc.1-1.3.2.2.1"><a href="#section-3.2" class="auto internal xref">3.2</a>.  <a href="#name-secret-management" class="internal xref">Secret Management</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.3">
+                <p id="section-toc.1-1.3.2.3.1"><a href="#section-3.3" class="auto internal xref">3.3</a>.  <a href="#name-agent-registration" class="internal xref">Agent Registration</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.4">
+                <p id="section-toc.1-1.3.2.4.1"><a href="#section-3.4" class="auto internal xref">3.4</a>.  <a href="#name-agent-onboarding" class="internal xref">Agent Onboarding</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.5">
+                <p id="section-toc.1-1.3.2.5.1"><a href="#section-3.5" class="auto internal xref">3.5</a>.  <a href="#name-agent-discovery" class="internal xref">Agent Discovery</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-cross-domain-interconnectio" class="internal xref">Cross-Domain Interconnection</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-cross-domain-identifier-int" class="internal xref">Cross-Domain Identifier Interoperability</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-secure-cross-domain-transmi" class="internal xref">Secure Cross-Domain Transmission</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.3">
+                <p id="section-toc.1-1.4.2.3.1"><a href="#section-4.3" class="auto internal xref">4.3</a>.  <a href="#name-authenticating-external-cal" class="internal xref">Authenticating External Calls</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.4">
+                <p id="section-toc.1-1.4.2.4.1"><a href="#section-4.4" class="auto internal xref">4.4</a>.  <a href="#name-iam-integration" class="internal xref">IAM Integration</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-access-control" class="internal xref">Access Control</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-authorization-handling" class="internal xref">Authorization Handling</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-authorization-models" class="internal xref">Authorization Models</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.3">
+                <p id="section-toc.1-1.5.2.3.1"><a href="#section-5.3" class="auto internal xref">5.3</a>.  <a href="#name-authorization-chaining-acro" class="internal xref">Authorization Chaining Across Domains</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.4">
+                <p id="section-toc.1-1.5.2.4.1"><a href="#section-5.4" class="auto internal xref">5.4</a>.  <a href="#name-converting-to-internal-work" class="internal xref">Converting to Internal Workflow</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.5">
+                <p id="section-toc.1-1.5.2.5.1"><a href="#section-5.5" class="auto internal xref">5.5</a>.  <a href="#name-interoperability-for-hetero" class="internal xref">Interoperability for Heterogeneous Systems</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.6">
+                <p id="section-toc.1-1.5.2.6.1"><a href="#section-5.6" class="auto internal xref">5.6</a>.  <a href="#name-zero-trust-analysis" class="internal xref">Zero Trust Analysis</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#appendix-A" class="auto internal xref"></a><a href="#name-revision-history" class="internal xref">Revision History</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#appendix-A.1" class="auto internal xref"></a><a href="#name-changes-from-00-to-01" class="internal xref">Changes from -00 to -01</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#appendix-A.2" class="auto internal xref"></a><a href="#name-changes-from-01-to-02" class="internal xref">Changes from -01 to -02</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="introduction">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">With the widespread application of agentic AI technology across various business scenarios, its security issues have become increasingly prominent.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">This document aims to provide an architecture addressing security requirements across different stages of interactions in agentic AI use cases. These include provisioning, registration, discovery, cross-domain interconnection, and access control. This document establishes a starting point to guide discussions on agentic AI security design, development, and implementation.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">The target audience of this document is IETF security experts who wish to understand AI agents' behavioral patterns and evaluate whether the proposed security requirements are worthy of further security designs.<a href="#section-1-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="architecture">
+<section id="section-2">
+      <h2 id="name-architecture">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-architecture" class="section-name selfRef">Architecture</a>
+      </h2>
+<p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-2-2">
+<pre>
+                 +----------------+
+                 |  Master Agent  |
+                 +-^--------------+
+                 +-+--------------+
+                 | |  Firewall    |
+                 +-+--------------+
+                   |
+-------------- (2) | Inter-domain--------------
+                   |
++------------------+---------------------------------+
+|                +-+--------------+   Intra-domain   |
+|                | |  Firewall    |                  |
+|                +-+--------------+                  |
+|                +-v--------------+                  |
+|        +-------+  Master Agent  |                  |
+|   (3)  |       +----------------+                  |
+|        |                              (1)          |
+|   +----v-----+    +----------+    +----------+     |
+|   |  Agent   +----&gt;  Agent   +----&gt;  Agent   |     |
+|   +----+-----+    +----------+    +----+-----+     |
+|        |                               |           |
+|     +--v---------+           +---------v---+       |
+|     |    DB      |           |     API     |       |
+|     +------------+           +-------------+       |
++----------------------------------------------------+
+</pre><a href="#section-2-2" class="pilcrow">¶</a>
+</div>
+<p id="section-2-3"><em>Figure 1. Architecture of Agent Security Control and Management</em><a href="#section-2-3" class="pilcrow">¶</a></p>
+<p id="section-2-4">The architecture of agent security control and management is illustrated in Figure 1. There are three types of security interactions, in sequential order:<a href="#section-2-4" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-5">
+<li id="section-2-5.1">
+          <p id="section-2-5.1.1">Provisioning, Registration, and Discovery: Creating agent identities, establishing initial trust, provisioning agent secrets and credentials, and onboarding agents to enable discovery.<a href="#section-2-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-5.2">
+          <p id="section-2-5.2.1">Cross-Domain Interconnection: Enabling secure, authenticated communication between agents across different trust domains.<a href="#section-2-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-5.3">
+          <p id="section-2-5.3.1">Access Control: The Master Agent validates both intra-domain and inter-domain access tokens, creates internal workflows, and manages different credentials for heterogeneous systems.<a href="#section-2-5.3.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-2-6">Therefore, the architecture includes four components:<a href="#section-2-6" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-2-7">
+<li id="section-2-7.1">
+          <p id="section-2-7.1.1">Firewall: A network security device designed to monitor, filter, and control incoming and outgoing network traffic based on predetermined security rules.<a href="#section-2-7.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-7.2">
+          <p id="section-2-7.2.1">Master Agent: The central orchestrating entity that manages multi-agent operations, including cross-domain communication, workflow coordination, credential management, and security policy management.<a href="#section-2-7.2.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-7.3">
+          <p id="section-2-7.3.1">Agents: Autonomous software entities deployed in various domains to perform specific tasks.<a href="#section-2-7.3.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-2-7.4">
+          <p id="section-2-7.4.1">Heterogeneous Systems: API endpoints, microservices, tools, and databases.<a href="#section-2-7.4.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<p id="section-2-8">The above architecture is presented from the perspective of a service flow. From the identity management perspective, we recommend reusing existing IETF work such as WIMSE. The draft <span>[<a href="#I-D.ni-wimse-ai-agent-identity" class="cite xref">I-D.ni-wimse-ai-agent-identity</a>]</span> discusses the applicability of WIMSE to agentic AI.<a href="#section-2-8" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="provisioning-registration-and-discovery">
+<section id="section-3">
+      <h2 id="name-provisioning-registration-a">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-provisioning-registration-a" class="section-name selfRef">Provisioning, Registration, and Discovery</a>
+      </h2>
+<p id="section-3-1">Figure 2 shows the diagram of provisioning and registration, which includes Agent Credential Authority (ACA) and Agent Registry Service (ARS):<a href="#section-3-1" class="pilcrow">¶</a></p>
+<ol start="1" type="1" class="normal type-1" id="section-3-2">
+<li id="section-3-2.1">
+          <p id="section-3-2.1.1">ACA (Agent Credential Authority): A trusted third party that issues and manages credentials for agents. Credential formats include, but are not limited to, X.509 certificates and identity tokens.<a href="#section-3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li id="section-3-2.2">
+          <p id="section-3-2.2.1">ARS (Agent Registry Service): A system responsible for agent identity registration and discovery.<a href="#section-3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ol>
+<div class="alignLeft art-text artwork" id="section-3-3">
+<pre>
++-------------------------------------------+
+|                                           |
+| +-----------------+  +------------------+ |
+| |Agent Credential |  |  Agent Registry  | |
+| |Authority (ACA)  |  |  Service (ARS)   | |
+| +--------^--------+  +---------^--------+ |
+|          |                     |          |
+|         ++---------------------++         |
+|         ||     +----------+    ||         |
+|         |+-----&gt;   Agent  +----+|         |
+|         |      +----------+     |         |
+|         |                       |         |
+|         |   device/container    |         |
+|         +-----------------------+         |
+|                                           |
++-------------------------------------------+
+</pre><a href="#section-3-3" class="pilcrow">¶</a>
+</div>
+<p id="section-3-4"><em>Figure 2. Diagram for Provisioning and Registration</em><a href="#section-3-4" class="pilcrow">¶</a></p>
+<div id="identity-provisioning-and-management">
+<section id="section-3.1">
+        <h3 id="name-identity-provisioning-and-m">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-identity-provisioning-and-m" class="section-name selfRef">Identity Provisioning and Management</a>
+        </h3>
+<p id="section-3.1-1">Identity provisioning and management involve creating and assigning a verifiable digital identity to an agent.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1">Initial Trust Establishment: Initial trust can be established through one or more of the following trust anchors, including, but not limited to: a manufacturer-embedded immutable credential like an IDevID certificate; a hardware root of trust like a Trusted Platform Module (TPM) or Hardware Security Module (HSM); identity documents like an AWS Instance Identity Document or an Azure Managed Service Identity token. This step verifies the agent's execution environment (device, container, etc.) as trustworthy, allows the device or container to join the network, thereby enabling secure operations for all subsequent steps.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-2.2">
+            <p id="section-3.1-2.2.1">Credential Request: During a credential request, the agent must provide multiple proofs of its legitimacy, could include, for example, but not limited to:<a href="#section-3.1-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.1-2.2.2.1">
+                <p id="section-3.1-2.2.2.1.1">Proof of Possession (PoP): A Certificate Signing Request (CSR) or other PoP forms signed with the agent's private key, demonstrating that the agent holds the private key corresponding to the requested identity.<a href="#section-3.1-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.2">
+                <p id="section-3.1-2.2.2.2.1">Remote Attestation Evidence or Result: A set of security-relevant claims about the Target Environment submitted to a RATS Verifier (which could be the ACA), providing information about operational status, health, configuration, or construction.<a href="#section-3.1-2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.3">
+                <p id="section-3.1-2.2.2.3.1">AI Bill of Materials (AIBOM): A comprehensive inventory that details the agent's supply chain, including models, datasets, configurations, dependencies, and related infrastructure. This prevents the use of vulnerable AI components.<a href="#section-3.1-2.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.4">
+                <p id="section-3.1-2.2.2.4.1">Provider Endorsement: A digital signature or credential from the Agent Provider, ensuring the agent originated from a trusted source.<a href="#section-3.1-2.2.2.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-3.1-2.2.2.5">
+                <p id="section-3.1-2.2.2.5.1">Identity Binding: A cryptographic binding to a specific human user or an organizational role to specify on whose behalf the agent operates and its authorized scope.<a href="#section-3.1-2.2.2.5.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-3.1-2.3">
+            <p id="section-3.1-2.3.1">Credential Issuance: The ACA validates proofs and requests from the above two steps, if passed, it issues an agent-specific credential that may include its owner or requester identity, capabilities, locator, acceptable validation methods for the ARS.<a href="#section-3.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.1-2.4">
+            <p id="section-3.1-2.4.1">Credential Lifecycle Management: The ACA not only issues credentials but also defines and enforces revocation policies. These policies are triggered by specific events, such as a detected security compromise, the agent's scheduled decommissioning, or key rotation.<a href="#section-3.1-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="secret-management">
+<section id="section-3.2">
+        <h3 id="name-secret-management">
+<a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-secret-management" class="section-name selfRef">Secret Management</a>
+        </h3>
+<p id="section-3.2-1">AI agents SHOULD NOT have direct access to secrets due to new threats like Prompt Injection. AI Agents SHOULD reuse secret management modules on the platform it operates on, for example, cloud secret managers or TEE/keystore/keychains on smart devices. Best practices like secret/credential generation, rotation and revocation apply. Agents SHOULD only obtain temporary access tokens or signed messages via a secure API or other kind of trusted intermediary. Guardrails also apply for general secret information exfiltration prevention.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="agent-registration">
+<section id="section-3.3">
+        <h3 id="name-agent-registration">
+<a href="#section-3.3" class="section-number selfRef">3.3. </a><a href="#name-agent-registration" class="section-name selfRef">Agent Registration</a>
+        </h3>
+<p id="section-3.3-1">After receiving a credential from the ACA, the agent then sends it to the ARS to authenticate itself and start the registration process.<a href="#section-3.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.3-2.1">
+            <p id="section-3.3-2.1.1">Authentication: The ARS must verify the legitimacy of the credential submitted by the agent. It must be signed or otherwise endorsed by the ACA.<a href="#section-3.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.3-2.2">
+            <p id="section-3.3-2.2.1">Registration: The ARS then checks if the information signed by the ACA, such as the agent's capabilities, exactly matches the registration request sent by the agent. Upon successful validation, the ARS assigns the agent a unique identifier and establishes an agent record that links the identifier to its attributes.<a href="#section-3.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.3-2.3">
+            <p id="section-3.3-2.3.1">Record Management: The ARS removes expired credentials and synchronizes with the ACA to ensure timely revocation of credentials, preventing the use of invalid or compromised credentials.<a href="#section-3.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="agent-onboarding">
+<section id="section-3.4">
+        <h3 id="name-agent-onboarding">
+<a href="#section-3.4" class="section-number selfRef">3.4. </a><a href="#name-agent-onboarding" class="section-name selfRef">Agent Onboarding</a>
+        </h3>
+<p id="section-3.4-1">Agent onboarding differs between campus and cloud environments. On campus, agents use protocols like EAP-TLS for network access. In the cloud, the process involves injected sidecars, which register agents to the central service mesh registry automatically to enable communication and management.<a href="#section-3.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="agent-discovery">
+<section id="section-3.5">
+        <h3 id="name-agent-discovery">
+<a href="#section-3.5" class="section-number selfRef">3.5. </a><a href="#name-agent-discovery" class="section-name selfRef">Agent Discovery</a>
+        </h3>
+<p id="section-3.5-1">After agent onboarding, the discovery process enables entities (e.g., a human user, an agent, etc.) to find and connect with registered agents.<a href="#section-3.5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.5-2.1">
+            <p id="section-3.5-2.1.1">Authentication: The ARS must authenticate the entity initiating the discovery request. The requester is required to present a valid identity credential.<a href="#section-3.5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-2.2">
+            <p id="section-3.5-2.2.1">Capability Filtering and Matching: The ARS performs dynamic filtering based on the requester’s identity and query and returns only agent records relevant to the query, enforcing the principle of least privilege at the discovery layer.<a href="#section-3.5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3.5-2.3">
+            <p id="section-3.5-2.3.1">Cross-Domain Agent Discovery: The ARS should support the discovery of trust bundles for verifying agent identities across administrative domains. <span>[<a href="#I-D.yao-dawn-agent-discovery-architect" class="cite xref">I-D.yao-dawn-agent-discovery-architect</a>]</span> proposes a DNS-like discovery architecture in which Agent Registries manage domain-level trust bundles, enabling agent identities registered in one administrative domain to be verified across domains.<a href="#section-3.5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="cross-domain-interconnection">
+<section id="section-4">
+      <h2 id="name-cross-domain-interconnectio">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-cross-domain-interconnectio" class="section-name selfRef">Cross-Domain Interconnection</a>
+      </h2>
+<div id="cross-domain-identifier-interoperability">
+<section id="section-4.1">
+        <h3 id="name-cross-domain-identifier-int">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-cross-domain-identifier-int" class="section-name selfRef">Cross-Domain Identifier Interoperability</a>
+        </h3>
+<p id="section-4.1-1">Different domains may use distinct identifier schemas. Possible methods include:<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.1-2.1">
+            <p id="section-4.1-2.1.1">Pre-configured schema translation<a href="#section-4.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.2">
+            <p id="section-4.1-2.2.1">Cross-domain identifier synchronization<a href="#section-4.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.1-2.3">
+            <p id="section-4.1-2.3.1">A universal parsing framework or system<a href="#section-4.1-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="secure-cross-domain-transmission">
+<section id="section-4.2">
+        <h3 id="name-secure-cross-domain-transmi">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-secure-cross-domain-transmi" class="section-name selfRef">Secure Cross-Domain Transmission</a>
+        </h3>
+<p id="section-4.2-1">A mutual TLS (mTLS) connection is established between the external requesting agent and the master agent. The master agent terminates the mTLS connection and parses application-layer requests. In this case, the master agent functions as an OAuth resource server and manages internal task orchestration.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authenticating-external-calls">
+<section id="section-4.3">
+        <h3 id="name-authenticating-external-cal">
+<a href="#section-4.3" class="section-number selfRef">4.3. </a><a href="#name-authenticating-external-cal" class="section-name selfRef">Authenticating External Calls</a>
+        </h3>
+<p id="section-4.3-1">The master agent then verifies the identity of the requesting agent, and whether or not it has permission to the requested service or agent. Different authentication methods might be possible:<a href="#section-4.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3-2.1">
+            <p id="section-4.3-2.1.1">API keys<a href="#section-4.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-2.2">
+            <p id="section-4.3-2.2.1">Username-password<a href="#section-4.3-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-2.3">
+            <p id="section-4.3-2.3.1">Pre-shared secrets<a href="#section-4.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-2.4">
+            <p id="section-4.3-2.4.1">Assertions (for example, JWT Authorization Grants as discussed in <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span>)<a href="#section-4.3-2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-4.3-3">These methods may also be combined using AND/OR logic. During this process, the master agent might be able to identify the caller endpoint type:<a href="#section-4.3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-4.3-4.1">
+            <p id="section-4.3-4.1.1">Human user via browser or app<a href="#section-4.3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-4.2">
+            <p id="section-4.3-4.2.1">Human user via API<a href="#section-4.3-4.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-4.3">
+            <p id="section-4.3-4.3.1">AI agents<a href="#section-4.3-4.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-4.3-4.4">
+            <p id="section-4.3-4.4.1">Hardware or equipment via an IoT API<a href="#section-4.3-4.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="iam-integration">
+<section id="section-4.4">
+        <h3 id="name-iam-integration">
+<a href="#section-4.4" class="section-number selfRef">4.4. </a><a href="#name-iam-integration" class="section-name selfRef">IAM Integration</a>
+        </h3>
+<p id="section-4.4-1">Since the agent may inherit its access rights from its owner or user, when authenticating requests, the validation might require integration of IAM systems for redirected verification.<a href="#section-4.4-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="access-control">
+<section id="section-5">
+      <h2 id="name-access-control">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-access-control" class="section-name selfRef">Access Control</a>
+      </h2>
+<div id="authorization-handling">
+<section id="section-5.1">
+        <h3 id="name-authorization-handling">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-authorization-handling" class="section-name selfRef">Authorization Handling</a>
+        </h3>
+<p id="section-5.1-1">The master agent acts as the OAuth 2.1 resource server and a Policy Enforcement Point (PEP). Its responsibilities are as follows:<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-2.1">
+            <p id="section-5.1-2.1.1">Token Validation: The master agent must validate access tokens as described in OAuth 2.1 Section 5.2. If validation fails, it must respond according to OAuth 2.1 Section 5.3 error handling requirements.<a href="#section-5.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-2.2">
+            <p id="section-5.1-2.2.1">Fine-Grained Policy Enforcement: The master agent serves as a PEP that queries a PDP (Policy Decision Point), such as Open Policy Agent (OPA), to evaluate the requester’s access request. The PDP functions by taking the master agent's query, pre-configured policies (supporting RBAC, ABAC, ReBAC models, etc.), and data as inputs to decide whether the requester is authorized for its intended action. The PDP then returns the final decision to the master agent for enforcement.<a href="#section-5.1-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="authorization-models">
+<section id="section-5.2">
+        <h3 id="name-authorization-models">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-authorization-models" class="section-name selfRef">Authorization Models</a>
+        </h3>
+<p id="section-5.2-1">In enterprise environments, Role-based Access Control (RBAC) Attribute-based Access Control (ABAC) or Adaptive Access Control (AdBAC) are different access control models used in practice. Regarding access control models, there are 2 ways forward:<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-2.1">
+            <p id="section-5.2-2.1.1">whatever the authorization model used in the enterprise itself applies to AI Agents. This leaves 2 cases possible:<a href="#section-5.2-2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.2-2.1.2.1">
+                <p id="section-5.2-2.1.2.1.1">The agent carries the identity and inherit access rights from its owner (a human or a department). Carrying such human identity will help security control points make decisions with sufficient context, and to the discretion of its internal security policy plus access control model.<a href="#section-5.2-2.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.2-2.1.2.2">
+                <p id="section-5.2-2.1.2.2.1">The agent does not carry the identity from its owner. It carries independent security contexts rich enough for access control.<a href="#section-5.2-2.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-5.2-2.2">
+            <p id="section-5.2-2.2.1">AI Agents require a new authorization model completely.<a href="#section-5.2-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.2-3">This section would require more discussion for best current practices.<a href="#section-5.2-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authorization-chaining-across-domains">
+<section id="section-5.3">
+        <h3 id="name-authorization-chaining-acro">
+<a href="#section-5.3" class="section-number selfRef">5.3. </a><a href="#name-authorization-chaining-acro" class="section-name selfRef">Authorization Chaining Across Domains</a>
+        </h3>
+<p id="section-5.3-1">In an agentic AI use case, a request may traverse multiple master agents in multiple trust domains before completing. It is common that the requesting agent from domain A needs to access the master agent of domain B. During this process, the following information should be preserved:<a href="#section-5.3-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.1">
+            <p id="section-5.3-2.1.1">Original requesting agent identity<a href="#section-5.3-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.3-2.2">
+            <p id="section-5.3-2.2.1">Authorization context<a href="#section-5.3-2.2.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.3-2.2.2.1">
+                <p id="section-5.3-2.2.2.1.1">Scope<a href="#section-5.3-2.2.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.3-2.2.2.2">
+                <p id="section-5.3-2.2.2.2.1">Resource<a href="#section-5.3-2.2.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.3-2.2.2.3">
+                <p id="section-5.3-2.2.2.3.1">Audience<a href="#section-5.3-2.2.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.3-2.2.2.4">
+                <p id="section-5.3-2.2.2.4.1">Grant type<a href="#section-5.3-2.2.2.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.3-2.2.2.5">
+                <p id="section-5.3-2.2.2.5.1">Assertion<a href="#section-5.3-2.2.2.5.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-5.3-2.3">
+            <p id="section-5.3-2.3.1">Agent-to-Agent Context<a href="#section-5.3-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.3-3">The Identity Chaining specification <span>[<a href="#I-D.ietf-oauth-identity-chaining" class="cite xref">I-D.ietf-oauth-identity-chaining</a>]</span> supports the propagation of identity and authorization information across domains. Building on this, the Cross-Domain Transaction Tokens draft <span>[<a href="#I-D.liu-oauth-cross-domain-txn-token" class="cite xref">I-D.liu-oauth-cross-domain-txn-token</a>]</span> explores how workflow context can be securely transferred across domains to support the issuance of Transaction Tokens for downstream workflows.<a href="#section-5.3-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="converting-to-internal-workflow">
+<section id="section-5.4">
+        <h3 id="name-converting-to-internal-work">
+<a href="#section-5.4" class="section-number selfRef">5.4. </a><a href="#name-converting-to-internal-work" class="section-name selfRef">Converting to Internal Workflow</a>
+        </h3>
+<p id="section-5.4-1">Complex tasks often require multi-agent collaboration. The master agent receives, parses, and extracts the original job request from the external requesting agent, then creates sequential workflows or parallel calls. This requires the master agent to have information about all callable internal API assets, agent capabilities, etc.<a href="#section-5.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.4-2.1">
+            <p id="section-5.4-2.1.1">Batch Authorization Delegation: Parallel execution by multiple downstream agents may require different permissions for each subtask. The Batch Authorization Delegation draft <span>[<a href="#I-D.ni-oauth-batch-authorization-delegation" class="cite xref">I-D.ni-oauth-batch-authorization-delegation</a>]</span> proposes requesting multiple fine-grained permissions in a single authorization request, specifying the designated agent for each permission, and enabling each agent to obtain an appropriately scoped access token through token exchange.<a href="#section-5.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.4-2.2">
+            <p id="section-5.4-2.2.1">Downscoping: If the master agent intends to use a workflow, it extracts the original caller's identity and authorization context, and initiates a new internal workflow. It should follow the principle of least privilege through Transaction Token downscoping, as specified in <span>[<a href="#I-D.ietf-oauth-transaction-tokens" class="cite xref">I-D.ietf-oauth-transaction-tokens</a>]</span>. The access rights to each downstream workload decrease.<a href="#section-5.4-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.4-2.3">
+            <p id="section-5.4-2.3.1">Agent-to-Agent Context: The agent-to-agent context and intent of the original requester must be preserved and propagated throughout the workflow to avoid authorization drift and context poisoning.<a href="#section-5.4-2.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="interoperability-for-heterogeneous-systems">
+<section id="section-5.5">
+        <h3 id="name-interoperability-for-hetero">
+<a href="#section-5.5" class="section-number selfRef">5.5. </a><a href="#name-interoperability-for-hetero" class="section-name selfRef">Interoperability for Heterogeneous Systems</a>
+        </h3>
+<p id="section-5.5-1">Within a domain, there might exist different types of heterogeneous systems or legacy systems that require different authentication methods. They could be API endpoints, microservices, tools or databases. The exact authentication methods are determined by the service itself, for example:<a href="#section-5.5-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.5-2.1">
+            <p id="section-5.5-2.1.1">Identity tokens<a href="#section-5.5-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.2">
+            <p id="section-5.5-2.2.1">API keys<a href="#section-5.5-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.3">
+            <p id="section-5.5-2.3.1">Pre-shared secrets<a href="#section-5.5-2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.4">
+            <p id="section-5.5-2.4.1">Username-password<a href="#section-5.5-2.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.5-2.5">
+            <p id="section-5.5-2.5.1">X.509 certificates<a href="#section-5.5-2.5.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-5.5-3">As a result, the master agent also works as an intermediary credential manager that converts the formats, scopes, identity of the credential, bridging the gap between heterogeneous systems and platforms.<a href="#section-5.5-3" class="pilcrow">¶</a></p>
+<p id="section-5.5-4">Examples include:<a href="#section-5.5-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.5-5.1">
+            <p id="section-5.5-5.1.1">Static secrets (API keys) to be exchanged to short-lived, on demand credentials (identity tokens)<a href="#section-5.5-5.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="zero-trust-analysis">
+<section id="section-5.6">
+        <h3 id="name-zero-trust-analysis">
+<a href="#section-5.6" class="section-number selfRef">5.6. </a><a href="#name-zero-trust-analysis" class="section-name selfRef">Zero Trust Analysis</a>
+        </h3>
+<p id="section-5.6-1">The above information can be used as rich context that allows zero trust access control. There are three additional aspects that can be implemented to enhance the zero trust framework:<a href="#section-5.6-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.6-2.1">
+            <p id="section-5.6-2.1.1">Remote Attestation Results:  For the PEP at the master agent or the internal resource server, Remote attestation results could also be part of the inputs, which could include the following information:<a href="#section-5.6-2.1.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.6-2.1.2.1">
+                <p id="section-5.6-2.1.2.1.1">Roots of Trust (RoT) and trust anchors<a href="#section-5.6-2.1.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.6-2.1.2.2">
+                <p id="section-5.6-2.1.2.2.1">Identifiers<a href="#section-5.6-2.1.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.6-2.1.2.3">
+                <p id="section-5.6-2.1.2.3.1">Affiliations<a href="#section-5.6-2.1.2.3.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.6-2.1.2.4">
+                <p id="section-5.6-2.1.2.4.1">Posture assessment results<a href="#section-5.6-2.1.2.4.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.6-2.1.2.5">
+                <p id="section-5.6-2.1.2.5.1">Capabilities<a href="#section-5.6-2.1.2.5.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+          <li class="normal" id="section-5.6-2.2">
+            <p id="section-5.6-2.2.1">Continuous Observability: The system should utilize OpenTelemetry (OTel) to track each call across agents, sending OTel’s telemetry, which records call frequency, error rates, and behavioral anomalies, etc. to the PDP for real-time assessment.<a href="#section-5.6-2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.6-2.3">
+            <p id="section-5.6-2.3.1">Microsegmentation: Based on the telemetry data, PDP can issue software-defined security policies to PEP at the perimeter of each segment to enforce microsegmentation, in order to prevent lateral movement of security risks. Possible granularity of microsegmentation includes:<a href="#section-5.6-2.3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.6-2.3.2.1">
+                <p id="section-5.6-2.3.2.1.1">per IP segment/subnet<a href="#section-5.6-2.3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.6-2.3.2.2">
+                <p id="section-5.6-2.3.2.2.1">per workload<a href="#section-5.6-2.3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+              <li class="normal" id="section-5.6-2.3.2.3">
+                <p id="section-5.6-2.3.2.3.1">per tags and attributes (of workload), etc.<a href="#section-5.6-2.3.2.3.1" class="pilcrow">¶</a></p>
+</li>
+            </ul>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="iana-considerations">
+<section id="section-6">
+      <h2 id="name-iana-considerations">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<p id="section-6-1">This document has no IANA actions.<a href="#section-6-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-combined-references">
+<section id="section-7">
+      <h2 id="name-references">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-7.1">
+        <h3 id="name-normative-references">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+      <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-7.2">
+        <h3 id="name-informative-references">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="I-D.ietf-oauth-identity-chaining">[I-D.ietf-oauth-identity-chaining]</dt>
+        <dd>
+<span class="refAuthor">Schwenkschuster, A.</span>, <span class="refAuthor">Kasselman, P.</span>, <span class="refAuthor">Burgin, K.</span>, <span class="refAuthor">Jenkins, M. J.</span>, <span class="refAuthor">Campbell, B.</span>, and <span class="refAuthor">A. Parecki</span>, <span class="refTitle">"OAuth Identity and Authorization Chaining Across Domains"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-identity-chaining-17</span>, <time datetime="2026-07-19" class="refDate">19 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-chaining-17">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-identity-chaining-17</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-oauth-transaction-tokens">[I-D.ietf-oauth-transaction-tokens]</dt>
+        <dd>
+<span class="refAuthor">Tulshibagwale, A.</span>, <span class="refAuthor">Fletcher, G.</span>, and <span class="refAuthor">P. Kasselman</span>, <span class="refTitle">"Transaction Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-oauth-transaction-tokens-11</span>, <time datetime="2026-07-30" class="refDate">30 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-11">https://datatracker.ietf.org/doc/html/draft-ietf-oauth-transaction-tokens-11</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.liu-oauth-cross-domain-txn-token">[I-D.liu-oauth-cross-domain-txn-token]</dt>
+        <dd>
+<span class="refAuthor">Liu, P. C.</span> and <span class="refAuthor">N. Yuan</span>, <span class="refTitle">"Cross-domain Transaction Tokens"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-liu-oauth-cross-domain-txn-token-00</span>, <time datetime="2026-07-03" class="refDate">3 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-liu-oauth-cross-domain-txn-token-00">https://datatracker.ietf.org/doc/html/draft-liu-oauth-cross-domain-txn-token-00</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ni-oauth-batch-authorization-delegation">[I-D.ni-oauth-batch-authorization-delegation]</dt>
+        <dd>
+<span class="refAuthor">Yuan, N.</span> and <span class="refAuthor">P. C. Liu</span>, <span class="refTitle">"Batch Authorization Delegation"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ni-oauth-batch-authorization-delegation-00</span>, <time datetime="2026-07-03" class="refDate">3 July 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ni-oauth-batch-authorization-delegation-00">https://datatracker.ietf.org/doc/html/draft-ni-oauth-batch-authorization-delegation-00</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.ni-wimse-ai-agent-identity">[I-D.ni-wimse-ai-agent-identity]</dt>
+        <dd>
+<span class="refAuthor">Yuan, N.</span>, <span class="refAuthor">Liu, P. C.</span>, and <span class="refAuthor">M. Richardson</span>, <span class="refTitle">"WIMSE Applicability for AI Agents"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ni-wimse-ai-agent-identity-03</span>, <time datetime="2026-09-30" class="refDate">30 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ni-wimse-ai-agent-identity-03">https://datatracker.ietf.org/doc/html/draft-ni-wimse-ai-agent-identity-03</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.yao-dawn-agent-discovery-architect">[I-D.yao-dawn-agent-discovery-architect]</dt>
+      <dd>
+<span class="refAuthor">Yao, J.</span>, <span class="refAuthor">Liu, P. C.</span>, <span class="refAuthor">Geng, G.</span>, <span class="refAuthor">Chen, M.</span>, and <span class="refAuthor">H. Li</span>, <span class="refTitle">"DNS-like Agent Discovery Architecture"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-yao-dawn-agent-discovery-architect-01</span>, <time datetime="2026-09-17" class="refDate">17 September 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-yao-dawn-agent-discovery-architect-01">https://datatracker.ietf.org/doc/html/draft-yao-dawn-agent-discovery-architect-01</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+</div>
+<div id="revision-history">
+<section id="appendix-A">
+      <h2 id="name-revision-history">
+<a href="#name-revision-history" class="section-name selfRef">Revision History</a>
+      </h2>
+<div id="changes-from-00-to-01">
+<section id="appendix-A.1">
+        <h3 id="name-changes-from-00-to-01">
+<a href="#name-changes-from-00-to-01" class="section-name selfRef">Changes from -00 to -01</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-A.1-1.1">
+            <p id="appendix-A.1-1.1.1">Expanded the security architecture to include agent discovery.<a href="#appendix-A.1-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.2">
+            <p id="appendix-A.1-1.2.1">Added requirements for secret management and agent discovery.<a href="#appendix-A.1-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.3">
+            <p id="appendix-A.1-1.3.1">Refined authorization models, cross-domain authorization, and internal workflow handling.<a href="#appendix-A.1-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.1-1.4">
+            <p id="appendix-A.1-1.4.1">Expanded zero trust considerations, including microsegmentation.<a href="#appendix-A.1-1.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="changes-from-01-to-02">
+<section id="appendix-A.2">
+        <h3 id="name-changes-from-01-to-02">
+<a href="#name-changes-from-01-to-02" class="section-name selfRef">Changes from -01 to -02</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-A.2-1.1">
+            <p id="appendix-A.2-1.1.1">Corrected editorial, grammatical, and reference issues.<a href="#appendix-A.2-1.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.2-1.2">
+            <p id="appendix-A.2-1.2.1">Updated author information to match the published -01 version.<a href="#appendix-A.2-1.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.2-1.3">
+            <p id="appendix-A.2-1.3.1">Added cross-domain agent discovery and trust bundle considerations, referencing the agent discovery architecture draft.<a href="#appendix-A.2-1.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.2-1.4">
+            <p id="appendix-A.2-1.4.1">Added cross-domain workflow context propagation using Transaction Tokens.<a href="#appendix-A.2-1.4.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.2-1.5">
+            <p id="appendix-A.2-1.5.1">Added batch authorization delegation for parallel multi-agent tasks.<a href="#appendix-A.2-1.5.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="appendix-A.2-1.6">
+            <p id="appendix-A.2-1.6.1">Removed the obsolete A2A profile reference.<a href="#appendix-A.2-1.6.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-B">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Yuan Ni</span></div>
+<div dir="auto" class="left"><span class="org">Huawei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:niyuan1@huawei.com" class="email">niyuan1@huawei.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Chunchi Peter Liu</span></div>
+<div dir="auto" class="left"><span class="org">Huawei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:liuchunchi@huawei.com" class="email">liuchunchi@huawei.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Qiangzhou Gao</span></div>
+<div dir="auto" class="left"><span class="org">Huawei</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:gaoqiangzhou@huawei.com" class="email">gaoqiangzhou@huawei.com</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Zhenbin Li</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:robinli314@163.com" class="email">robinli314@163.com</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
