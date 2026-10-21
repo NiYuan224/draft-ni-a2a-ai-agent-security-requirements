@@ -4,16 +4,25 @@ abbrev: "Agent Security Requirements"
 category: info
 
 docname: draft-ni-a2a-ai-agent-security-requirements-latest
-submissiontype: IETF
+submissiontype: IETF  # also: "independent", "editorial", "IAB", or "IRTF"
+number:
+date:
+consensus: true
 v: 3
-
+# area: AREA
+# workgroup: WG Working Group
 keyword:
-  - AI Agent
-  - Provisioning
-  - Authentication
-  - Authorization
+ - AI Agent
+ - Provisioning
+ - Authentication
+ - Authorization
 
 venue:
+  group: WG
+  type: Working Group
+  mail: WG@example.com
+  arch: https://example.com/WG
+  
   github: "liuchunchi/draft-ni-a2a-ai-agent-security-requirements"
   latest: "https://liuchunchi.github.io/draft-ni-a2a-ai-agent-security-requirements/draft-ni-a2a-ai-agent-security-requirements.html"
 
